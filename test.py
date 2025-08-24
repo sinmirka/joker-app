@@ -2,37 +2,28 @@ import flet as ft
 import os
 
 def main(page: ft.Page):
-    icon_path = 'assets/icon.png'
-
-    if os.path.exists(icon_path):
-        page.window.icon = icon_path
-    page.title = 'JOKER'
-    page.window.width = 400
-    page.window.height = 500
-    page.vertical_alignment = ft.MainAxisAlignment.START
-    page.horizontal_alignment = ft.MainAxisAlignment.CENTER
-
-    hello_text = ft.Text(
-        value='JOKER - Пранкер',
-        size=20,
-        color='blue',
-        weight='bold',
-        text_align='center'
-    )
-
-    def NotifyClicked(e):
-        print('Нажато')
-
-    NotifyButton = ft.ElevatedButton(
-        'Отправить уведомление от Windows',
-        on_click=NotifyClicked,
-        width=400
-    )
-
-    column = ft.Column(
-        controls=[hello_text, NotifyButton],
-        alignment=ft.MainAxisAlignment.CENTER
-    )
-    page.add(column)
+    # Получаем правильный путь к шрифту
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    font_path = os.path.join(current_dir, "src", "assets", "fonts", "SuperPeanut-PVAK7.ttf")
+    
+    # Проверяем существование файла
+    if os.path.exists(font_path):
+        print(f"Файл шрифта найден: {font_path}")
+        page.fonts = {'SuperPeanut': font_path}
+        
+        hello_text = ft.Text(
+            value='Welcome to JOKER',
+            size=24,
+            color=ft.Colors.RED,
+            weight='normal',
+            text_align='center',
+            font_family='SuperPeanut'
+        )
+        
+        page.add(hello_text)
+    else:
+        print(f"Файл шрифта НЕ найден: {font_path}")
+        # Покажем сообщение об ошибке
+        page.add(ft.Text("Ошибка: файл шрифта не найден", color=ft.Colors.RED))
 
 ft.app(target=main)
