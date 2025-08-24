@@ -6,7 +6,7 @@
 
 ## 📖 Overview
 
-JOKER is a Python-based application demonstrating system integration capabilities. It sends realistic Windows notifications and explores random folders in a playful manner.
+JOKER is a Python-based application demonstrating system integration capabilities. It is still in early development and currently can only send realistic Windows notifications and explore random folders.
 
 ## ⚠ Disclaimer
 
@@ -19,7 +19,7 @@ JOKER is a Python-based application demonstrating system integration capabilitie
 
 **Use only for educational purposes on your own devices!**
 
-## 🚀 Features
+## Features
 
 -  **System Notifications** - Realistic Windows security alerts
 -  **Random Folder Explorer** - Discovers and opens random directories
