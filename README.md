@@ -34,7 +34,6 @@ JOKER is a Python-based application demonstrating system integration capabilitie
 - **Python 3.8-3.13** - Cross-version compatible
 
 ### ⚠ Limitations
-- **Notifications** show "Python" as source (Windows limitation)
 - **Admin folders** require elevated privileges
 - **Antivirus software** may flag as false positive
 - **Non-Windows OS** not supported (uses Windows APIs)
