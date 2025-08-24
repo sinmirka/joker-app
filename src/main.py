@@ -112,8 +112,8 @@ class FolderManager:
 
         return all_folders
     
-    def OpenFolders(self):
-        folders = folder_manager.GetFolders(depth=5, count=5)
+    def OpenFolders(self, depth, count):
+        folders = folder_manager.GetFolders(depth, count)
         for folder in folders:
             try:
                 os.startfile(folder)
@@ -257,6 +257,17 @@ def main(page: ft.Page):
         progress_text.value = 'Остановлено'
         page.update()
 
+    def OpenFoldersButton(e):
+        try:
+            count = int(folder_count_field.value)
+            depth = int(folder_depth_field.value)
+            if count <= 0 or depth <= 0:
+                    raise ValueError('Значения должны быть больше 0')
+            folder_manager.OpenFolders(depth, count)
+        except Exception as e:
+            print(f'Ошибка {e}')
+
+    folder_button.on_click = OpenFoldersButton
     start_button.on_click = StartNotifying
     stop_button.on_click = StopNotifying
 
