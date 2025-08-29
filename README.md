@@ -1,5 +1,51 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
+# JOKER - Pranks App (Educational Project)
+
+> **⚠ WARNING: For educational purposes only! Use only on devices you own with explicit permission.**
+
+## 📖 Overview
+
+JOKER is a Python-based application demonstrating system integration capabilities. It is still in early development and currently can only send realistic Windows notifications and explore random folders.
+
+## ⚠ Disclaimer
+
+**THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.** The author is not responsible for:
+
+- Any damages caused by misuse or illegal use
+- Legal consequences of unauthorized usage  
+- System instability or data loss
+- Violation of local laws and regulations
+
+**Use only for educational purposes on your own devices!**
+
+## Features
+
+-  **System Notifications** - Realistic Windows security alerts
+-  **Random Folder Explorer** - Discovers and opens random directories
+-  **Modern GUI** - Built with Flet framework
+-  **Multi-threading** - Non-blocking user interface
+
+##  Compatibility
+
+###  Tested & Working
+- **Windows 10** (22H2+) - Full functionality
+- **Windows 11** (All versions) - Optimal performance
+- **Python 3.8-3.13** - Cross-version compatible
+
+### ⚠ Limitations
+- **Admin folders** require elevated privileges
+- **Antivirus software** may flag as false positive
+- **Non-Windows OS** not supported (uses Windows APIs)
+
+### 📋 Requirements
+```bash
+# Core dependencies
+flet >= 0.22.0
+pyinstaller >= 6.0.0
+pillow >= 10.0.0
+
+
 # Joker app
 
 ## Run the app
