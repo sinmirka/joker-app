@@ -1,29 +1,28 @@
-import flet as ft
+import platform
 import os
+import socket
+from datetime import datetime
 
-def main(page: ft.Page):
-    # Получаем правильный путь к шрифту
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    font_path = os.path.join(current_dir, "src", "assets", "fonts", "SuperPeanut-PVAK7.ttf")
+def get_system_info():
+    """Собирает основную информацию об устройстве"""
+    print("🖥️ Сбор информации об устройстве...")
     
-    # Проверяем существование файла
-    if os.path.exists(font_path):
-        print(f"Файл шрифта найден: {font_path}")
-        page.fonts = {'SuperPeanut': font_path}
-        
-        hello_text = ft.Text(
-            value='Welcome to JOKER',
-            size=24,
-            color=ft.Colors.RED,
-            weight='normal',
-            text_align='center',
-            font_family='SuperPeanut'
-        )
-        
-        page.add(hello_text)
-    else:
-        print(f"Файл шрифта НЕ найден: {font_path}")
-        # Покажем сообщение об ошибке
-        page.add(ft.Text("Ошибка: файл шрифта не найден", color=ft.Colors.RED))
+    info = {
+        "Операционная система": platform.system(),
+        "Версия ОС": platform.version(),
+        "Архитектура": platform.architecture()[0],
+        "Имя компьютера": socket.gethostname(),
+        "Имя пользователя": os.getlogin(),
+        "Процессор": platform.processor(),
+        "Количество ядер": os.cpu_count(),
+        "Время запуска": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Рабочая папка": os.getcwd()
+    }
+    
+    print("✅ Информация собрана:")
+    for key, value in info.items():
+        print(f"   {key}: {value}")
+    
+    return info
 
-ft.app(target=main)
+get_system_info()

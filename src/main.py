@@ -5,125 +5,15 @@ import string
 import time
 import flet as ft
 import threading
+import platform
+import socket
 
-class NotificationManager:
-    def __init__(self):
-        self.is_running = False
+from datetime import datetime
+from managers.folder import FolderManager
+from managers.notification import NotificationManager
 
-    def SendNotification(self, message):
-        messages = [
-            "Обнаружено 127 вирусов! Начинается очистка...",
-            "Системный реестр поврежден. Восстановление...",
-            "Ваши файлы были зашифрованы. Требуется оплата...",
-            "Обнаружена подозрительная активность в сети",
-            "Критическое обновление безопасности доступно",
-            "Windows обнаружила угрозу. Немедленное действие!"
-        ]
-        
-        title = "Центр безопасности Windows"
-        message = random.choice(messages)
-        icon_path = "C:\\Windows\\System32\\imageres.dll"
-        ps_script = f'''
-    Add-Type -AssemblyName System.Windows.Forms
-    $notify = New-Object System.Windows.Forms.NotifyIcon
-    $notify.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon("{icon_path}")
-    $notify.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Warning
-    $notify.BalloonTipTitle = "{title}"
-    $notify.BalloonTipText = "{message}"
-    $notify.Visible = $true
-    $notify.ShowBalloonTip(8000)
-    Start-Sleep -Seconds 8
-    $notify.Dispose()
-    '''  
-        try:
-            result = subprocess.run([
-                "powershell", 
-                "-WindowStyle", "Hidden", 
-                "-Command", ps_script
-            ], capture_output=True, text=True, timeout=2.5)
-
-            if result.stderr:
-                print(f"Ошибка PowerShell: {result.stderr}")
-            if result.stdout:
-                print(f"Вывод PowerShell: {result.stdout}")
-                
-        except subprocess.TimeoutExpired:
-            print("Таймаут выполнения PowerShell скрипта")
-        except Exception as e:
-            print(f"Общая ошибка: {e}")
-    
-    def SendMultipleNotifications(self, count, interval, progress_callback=None):
-        messages = [
-            "Обнаружено 127 вирусов! Начинается очистка...",
-            "Системный реестр поврежден. Восстановление не удалось.",
-            "Ваши файлы были зашифрованы. Требуется оплата...",
-            "Обнаружена подозрительная активность в сети",
-            "Критическое обновление безопасности необходимо для работы Windows",
-            "Windows обнаружила угрозу. Немедленное действие!"
-        ]
-
-        self.is_running=True
-        for i in range(count):
-            if not self.is_running:
-                break
-            message=random.choice(messages)
-            self.SendNotification(message)
-
-            if progress_callback:
-                progress_callback(i+1, count)
-            time.sleep(interval)
-        
-        self.is_running=False
-
-class FolderManager:
-    def __init__(self):
-        self.is_running = False
-        self.max_depth = 5
-
-    def GetDrives(self):
-        drives = []
-        for letter in string.ascii_uppercase:
-            drive_path = f"{letter}:/"
-            if os.path.exists(drive_path):
-                drives.append(drive_path)
-        return drives
-
-    def GetFolders(self, depth, count):
-        all_folders = []
-        drives = self.GetDrives()
-
-        for _ in range(count):
-            drive = random.choice(drives)
-            current_path = drive
-            for current_depth in range(depth):
-                try:
-                    items = os.listdir(current_path)
-                    folders = []
-                    for item in items:
-                        full_path = os.path.join(current_path, item)
-                        if os.path.isdir(full_path):
-                            folders.append(full_path)
-                    if not folders:
-                        break
-                    current_path = random.choice(folders)
-                except (PermissionError, OSError):
-                    break
-            all_folders.append(current_path)
-
-        return all_folders
-    
-    def OpenFolders(self, depth, count):
-        folders = folder_manager.GetFolders(depth, count)
-        for folder in folders:
-            try:
-                os.startfile(folder)
-                print(f'Открыто: {folder}')
-                time.sleep(0.1)
-            except Exception as e:
-                print(f'Ошибка открытия: {e}')
-
-folder_manager = FolderManager()
 notification_manager = NotificationManager()
+folder_manager = FolderManager()
 
 def main(page: ft.Page):
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -216,6 +106,15 @@ def main(page: ft.Page):
         icon=ft.Icons.SEND
     )
 
+    # system info gui
+
+    system_info_description = ft.Text(
+        'Информация системы и характеристики ПК',
+        size=14,
+        color=ft.Colors.GREY,
+        text_align='center'
+    )
+
 
 
     def UpdateProgressBar(current, total):
@@ -304,9 +203,33 @@ def main(page: ft.Page):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER
     )
 
+    SystemInfoSection = ft.Column(
+        controls = [
+            #System Info Collecting
+            ft.Text("💿 Информация о системе", size=20, weight="bold"),
+            system_info_description,
+            ft.Divider(),
+            ft.Text(f'''
+        Операционная система: {platform.system()},
+        Версия ОС: {platform.version()},
+        Архитектура: {platform.architecture()[0]},
+        Имя компьютера: {socket.gethostname()},
+        Имя пользователя: {os.getlogin()},
+        Процессор: {platform.processor()},
+        Количество ядер: {os.cpu_count()},
+        Время запуска: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
+        Рабочая папка: {os.getcwd()}
+                    ''', size = 15, weight='bold', color='grey'),
+        ],
+        spacing=15,
+        alignment=ft.MainAxisAlignment.START,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+    )
+
     list_view = ft.ListView(
         controls=[
             hello_text,
+            SystemInfoSection,
             FolderSection,
             NotificationSection
         ],
